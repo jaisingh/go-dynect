@@ -2,6 +2,7 @@ package dynect
 
 import (
 	"bytes"
+	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -52,9 +53,15 @@ type Client struct {
 
 // Creates a new Httpclient.
 func NewClient(customerName string) *Client {
+	tr := &http.Transport{
+		Proxy: http.ProxyFromEnvironment,
+		TLSClientConfig: &tls.Config{
+			InsecureSkipVerify: true,
+		},
+	}
 	return &Client{
 		CustomerName: customerName,
-		transport:    &http.Transport{Proxy: http.ProxyFromEnvironment},
+		transport:    tr,
 	}
 }
 

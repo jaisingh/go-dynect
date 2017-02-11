@@ -1,6 +1,7 @@
 package dynect
 
 import (
+	"crypto/tls"
 	"fmt"
 	"log"
 	"net/http"
@@ -15,10 +16,13 @@ type ConvenientClient struct {
 
 // NewConvenientClient Creates a new ConvenientClient
 func NewConvenientClient(customerName string) *ConvenientClient {
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
 	return &ConvenientClient{
 		Client{
 			CustomerName: customerName,
-			httpclient:   &http.Client{},
+			httpclient:   &http.Client{Transport: tr},
 		}}
 }
 
